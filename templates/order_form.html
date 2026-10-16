@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Place an Order</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 40px 0; }
+        .container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 440px; max-width: 92%; }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .product { display: flex; gap: 12px; align-items: center; background: #f4f4f9; padding: 10px; border-radius: 6px; margin-bottom: 10px; }
+        .product img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        small { color: #888; font-weight: normal; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        .btn { margin-top: 18px; width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #218838; }
+        .error { color: red; text-align: center; }
+        .back { text-align: center; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if product %}
+            <h2>Order: {{ product.name }}</h2>
+            <div class="product">
+                <img src="{{ product.image_path }}" alt="{{ product.name }}">
+                <div>
+                    <strong>{{ product.name }}</strong><br>
+                    KES {{ product.price }}
+                </div>
+            </div>
+        {% else %}
+            <h2>Custom Order</h2>
+            <p style="text-align:center; color:#666;">Tell me what you'd like me to crochet and share some inspiration photos.</p>
+        {% endif %}
+
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+        <form action="/orders" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="product_id" value="{{ product.id if product else '' }}">
+
+            <label for="color">Color(s) <small>(e.g. white body, pink border)</small></label>
+            <input type="text" id="color" name="color">
+
+            <label for="size">Size</label>
+            <select id="size" name="size">
+                <option value="">Choose a size</option>
+                <option>Small</option>
+                <option>Medium</option>
+                <option>Large</option>
+                <option>Custom (describe in notes)</option>
+            </select>
+
+            <label for="yarn">Yarn type</label>
+            <select id="yarn" name="yarn">
+                <option value="">Choose a yarn</option>
+                <option>Cotton</option>
+                <option>Acrylic</option>
+                <option>Wool blend</option>
+                <option>Not sure, advise me</option>
+            </select>
+
+            <label for="personalization">Personalization <small>(name or initials to add)</small></label>
+            <input type="text" id="personalization" name="personalization" maxlength="40">
+
+            <label for="notes">Notes {% if not product %}<small>(required for custom orders)</small>{% endif %}</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Anything else I should know?"></textarea>
+
+            <label for="inspo">Inspiration photos <small>(up to 5)</small></label>
+            <input type="file" id="inspo" name="inspo" accept="image/*" multiple>
+
+            <button type="submit" class="btn">Place order</button>
+        </form>
+        <div class="back"><a href="/">Back to store</a></div>
+    </div>
+</body>
+</html>

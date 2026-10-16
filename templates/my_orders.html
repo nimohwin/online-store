@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Orders</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f9; color: #333; }
+        header { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+        header h1 { margin: 0; font-size: 22px; }
+        nav a { margin-left: 15px; color: #007bff; text-decoration: none; }
+        main { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .order { background: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+        .top { display: flex; justify-content: space-between; align-items: center; }
+        .top h3 { margin: 0; }
+        .status { background: #ffc107; color: #333; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; }
+        .date { color: #888; font-size: 13px; margin: 4px 0 10px; }
+        .details p { margin: 4px 0; }
+        .thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .thumbs img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
+        .empty { text-align: center; color: #888; margin-top: 60px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Smart Cart</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/order/new">Custom order</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>My Orders</h2>
+        {% if orders %}
+            {% for o in orders %}
+            <div class="order">
+                <div class="top">
+                    <h3>{{ o.product.name if o.product else "Custom order" }}</h3>
+                    <span class="status">{{ o.status }}</span>
+                </div>
+                <div class="date">{{ o.created_at.strftime("%d %b %Y") }}</div>
+                <div class="details">
+                    {% if o.color %}<p><strong>Color:</strong> {{ o.color }}</p>{% endif %}
+                    {% if o.size %}<p><strong>Size:</strong> {{ o.size }}</p>{% endif %}
+                    {% if o.yarn %}<p><strong>Yarn:</strong> {{ o.yarn }}</p>{% endif %}
+                    {% if o.personalization %}<p><strong>Personalization:</strong> {{ o.personalization }}</p>{% endif %}
+                    {% if o.notes %}<p><strong>Notes:</strong> {{ o.notes }}</p>{% endif %}
+                </div>
+                {% if o.images %}
+                <div class="thumbs">
+                    {% for img in o.images %}<img src="{{ img.image_path }}" alt="Inspiration">{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">You haven't placed any orders yet.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -19,20 +19,26 @@
         .category { font-size: 12px; color: #888; text-transform: uppercase; }
         .price { font-weight: bold; color: #28a745; margin-top: 8px; }
         .empty { text-align: center; color: #888; margin-top: 60px; }
+        .order-btn { display: inline-block; margin-top: 10px; padding: 8px 14px; background: #28a745; color: #fff; border-radius: 4px; text-decoration: none; font-size: 14px; }
+        .order-btn:hover { background: #218838; }
     </style>
 </head>
 <body>
     <header>
         <h1>Smart Cart</h1>
         <nav>
-            {% if user %}
-                <span>Hi, {{ user.name }}</span>
-                {% if user.role == "admin" %}<a href="/admin/products/new">Add product</a>{% endif %}
-                <a href="/logout">Logout</a>
-            {% else %}
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
-            {% endif %}
+    
+          <a href="/order/new">Custom order</a>
+          {% if user %}
+             <a href="/my-orders">My orders</a>
+             {% if user.role == "admin" %}<a href="/admin/products/new">Add product</a>{% endif %}
+             <span style="margin-left:15px;">Hi, {{ user.name }}</span>
+             <a href="/logout">Logout</a>
+          {% else %}
+             <a href="/login">Login</a>
+             <a href="/register">Register</a>
+          {% endif %}
+
         </nav>
     </header>
 
@@ -48,6 +54,7 @@
                     <h3>{{ p.name }}</h3>
                     <p>{{ p.description }}</p>
                     <div class="price">KES {{ p.price }}</div>
+                    <a class="order-btn" href="/order/new?product_id={{ p.id }}">Order this</a>
                 </div>
             </div>
             {% endfor %}
